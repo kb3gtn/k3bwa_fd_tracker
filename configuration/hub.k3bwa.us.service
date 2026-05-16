@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn instance for hub.k3bwa.us
+After=network.target
+
+[Service]
+User=k3bwa
+Group=k3bwa
+WorkingDirectory=/webspaces/hub.k3bwa.us/webapp
+Environment="PATH=/webspaces/hub.k3bwa.us/webapp/.venv/bin"
+ExecStart=/webspaces/hub.k3bwa.us/webapp/.venv/bin/gunicorn --bind 127.0.0.1:5000 --workers 3 wsgi:app
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Field Day Tracker{% endblock %}</title>
+    <link href="/static/fonts.css" rel="stylesheet">
+    <style>
+        /* ── Dark theme (default) ── */
+        :root {
+            --bg:      #0a0e14;
+            --surface: #0f1520;
+            --card:    #0f1520;
+            --border:  #1e3a5f;
+            --cyan:    #00d4ff;
+            --green:   #00ff9d;
+            --yellow:  #ffcc00;
+            --red:     #ff4466;
+            --text:    #c8d8e8;
+            --muted:   #4a6a8a;
+            --glow-c:  0 0 10px rgba(0,212,255,0.4);
+            --glow-g:  0 0 10px rgba(0,255,157,0.4);
+        }
+
+        /* ── Light theme overrides ── */
+        body.light {
+            --bg:      #f0f4f8;
+            --surface: #dce8f0;
+            --card:    #ffffff;
+            --border:  #b0c4d8;
+            --cyan:    #0070a8;
+            --green:   #007a4d;
+            --yellow:  #a05000;
+            --red:     #cc2244;
+            --text:    #1a2a3a;
+            --muted:   #5a7a9a;
+            --glow-c:  none;
+            --glow-g:  none;
+        }
+
+        html { font-size: 133%; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--cyan);
+            padding: 0.55rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        header h1 {
+            font-family: 'Orbitron', monospace;
+            color: var(--cyan);
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-shadow: var(--glow-c);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        .page-label { color: var(--muted); font-size: 0.78rem; letter-spacing: 1px; }
+
+        /* ── UTC clock ── */
+        .utc-clock {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cyan);
+            text-shadow: var(--glow-c);
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+        .utc-label {
+            font-size: 0.6rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: block;
+            text-align: center;
+            margin-bottom: 1px;
+        }
+
+        /* ── Theme toggle pill ── */
+        .theme-toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 11px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .theme-toggle-label {
+            font-size: 0.65rem;
+            color: var(--text);
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            user-select: none;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 21px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .theme-switch input { display: none; }
+        .theme-slider {
+            position: absolute;
+            inset: 0;
+            background: var(--border);
+            border-radius: 21px;
+            border: 1px solid var(--cyan);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .theme-slider::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 2px;
+            top: 2px;
+            background: var(--cyan);
+            border-radius: 50%;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: var(--glow-c);
+        }
+        .theme-switch input:checked + .theme-slider::before {
+            transform: translateX(21px);
+        }
+
+        /* ── Main ── */
+        main {
+            flex: 1;
+            padding: 0.85rem 1.5rem;
+            overflow: auto;
+        }
+
+        /* ── Footer / rotation bar ── */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 0.35rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        .countdown { color: var(--muted); font-size: 0.75rem; min-width: 110px; }
+        .rot-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .rot-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--cyan);
+            box-shadow: var(--glow-c);
+            transition: width 0.25s linear;
+        }
+        .rot-btn {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.28rem 0.75rem;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--muted);
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+        .rot-btn:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow-c); }
+        .rot-btn.paused { border-color: var(--yellow); color: var(--yellow); }
+
+        {% block extra_style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>&#9733; {{ station_call }} ARRL Field Day Tracker</h1>
+        <div class="utc-clock-wrap">
+            <span class="utc-label">UTC</span>
+            <span class="utc-clock" id="utc-clock">--:--:-- ----/--/--</span>
+        </div>
+        <div class="header-right">
+            <span class="page-label">{{ page_label }}</span>
+            <div class="theme-toggle-wrap">
+                <span class="theme-toggle-label">&#9728; Day</span>
+                <label class="theme-switch" title="Toggle day/night mode">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="theme-slider"></span>
+                </label>
+                <span class="theme-toggle-label">Night &#9679;</span>
+            </div>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <div class="countdown" id="countdown">Next page in {{ (dwell_ms // 1000) }}s</div>
+        <div class="rot-bar"><div class="rot-fill" id="rot-progress"></div></div>
+        <button class="rot-btn" id="btn-pause" onclick="togglePause()">&#9646;&#9646; Pause</button>
+        <button class="rot-btn" onclick="goNext()">Next &#9654;</button>
+    </footer>
+    <script>
+        // ── UTC clock ──
+        function updateClock() {
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const time = pad(now.getUTCHours()) + ':' + pad(now.getUTCMinutes()) + ':' + pad(now.getUTCSeconds());
+            const date = now.getUTCFullYear() + '/' + pad(now.getUTCMonth() + 1) + '/' + pad(now.getUTCDate());
+            document.getElementById('utc-clock').textContent = time + '  ' + date;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // ── Theme toggle ──
+        const toggle = document.getElementById('theme-toggle');
+        const saved  = localStorage.getItem('fd_theme') || 'night';
+        if (saved === 'night') {
+            document.body.classList.remove('light');
+            toggle.checked = true;
+        } else {
+            document.body.classList.add('light');
+            toggle.checked = false;
+        }
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                document.body.classList.remove('light');
+                localStorage.setItem('fd_theme', 'night');
+            } else {
+                document.body.classList.add('light');
+                localStorage.setItem('fd_theme', 'day');
+            }
+        });
+
+        // ── Page rotation ──
+        const ROTATE_MS  = {{ dwell_ms }};
+        const nextUrl    = "{{ next_url }}";
+        let elapsed      = 0;
+        let paused       = false;
+        let refreshTimer = null;
+        const bar      = document.getElementById('rot-progress');
+        const cd       = document.getElementById('countdown');
+        const btnPause = document.getElementById('btn-pause');
+
+        function applyPaused() {
+            btnPause.textContent = '▶ Resume';
+            btnPause.classList.add('paused');
+            cd.textContent = 'Paused';
+            bar.style.transition = 'none';
+            if (!refreshTimer) refreshTimer = setInterval(refreshContent, 10000);
+        }
+
+        function applyRunning() {
+            btnPause.textContent = '❚❚ Pause';
+            btnPause.classList.remove('paused');
+            bar.style.transition = 'width 0.1s linear';
+            clearInterval(refreshTimer);
+            refreshTimer = null;
+        }
+
+        function refreshContent() {
+            fetch(window.location.href)
+                .then(r => r.text())
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const fresh = doc.querySelector('main');
+                    if (fresh) document.querySelector('main').innerHTML = fresh.innerHTML;
+                })
+                .catch(() => {});
+        }
+
+        function togglePause() {
+            paused = !paused;
+            localStorage.setItem('fd_paused', paused ? '1' : '0');
+            paused ? applyPaused() : applyRunning();
+        }
+
+        function goNext() {
+            // preserve paused state for the next page
+            localStorage.setItem('fd_paused', paused ? '1' : '0');
+            window.location.href = nextUrl;
+        }
+
+        // restore paused state on load
+        if (localStorage.getItem('fd_paused') === '1') {
+            paused = true;
+            applyPaused();
+        }
+
+        // skip this page immediately if dwell is 0 and not paused
+        if (ROTATE_MS === 0 && !paused) {
+            window.location.href = nextUrl;
+        }
+
+        const tid = setInterval(() => {
+            if (paused) return;
+            elapsed += 100;
+            bar.style.width = (elapsed / ROTATE_MS * 100) + '%';
+            const rem = Math.ceil((ROTATE_MS - elapsed) / 1000);
+            cd.textContent = 'Next page in ' + rem + 's';
+            if (elapsed >= ROTATE_MS) { clearInterval(tid); bar.style.width = '100%'; setTimeout(() => { window.location.href = nextUrl; }, 300); }
+        }, 100);
+    </script>
+    {% block extra_script %}{% endblock %}
+</body>
+</html>

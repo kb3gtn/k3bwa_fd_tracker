@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}ARRL Section Tracker{% endblock %}
+
+{% block extra_style %}
+/* ── Stats bar ── */
+.stats-bar {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-end;
+}
+.stat-item { text-align: center; }
+.stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    display: block;
+    line-height: 1;
+}
+.stat-value.green { color: var(--green); text-shadow: var(--glow-g); }
+.stat-value.muted { color: var(--muted); text-shadow: none; }
+.stat-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── Overall progress ── */
+.overall-progress {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+}
+.overall-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--cyan));
+    box-shadow: 0 0 8px var(--green);
+    transition: width 0.5s ease;
+}
+
+/* ── District grid ── */
+.districts-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.district-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.45rem 0.5rem;
+}
+.district-header {
+    font-family: 'Orbitron', monospace;
+    color: var(--cyan);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    letter-spacing: 2px;
+    text-shadow: var(--glow-c);
+}
+.sections-list { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.chip {
+    padding: 0.22rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    cursor: default;
+}
+.chip.worked {
+    background: color-mix(in srgb, var(--green) 12%, transparent);
+    border-color: var(--green);
+    color: var(--green);
+    text-shadow: var(--glow-g);
+    box-shadow: 0 0 4px var(--green);
+}
+
+/* ── Canada row ── */
+.canada-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.45rem 0.6rem;
+    margin-bottom: 0.6rem;
+}
+.canada-header {
+    font-family: 'Orbitron', monospace;
+    color: var(--yellow);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 0.4rem;
+    text-shadow: 0 0 6px var(--yellow);
+}
+.canada-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+/* ── Recent contacts log ── */
+.log-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.log-title {
+    font-family: 'Orbitron', monospace;
+    background: var(--surface);
+    color: var(--cyan);
+    padding: 0.3rem 0.75rem;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    text-shadow: var(--glow-c);
+}
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.6rem;
+}
+.log-table thead th {
+    background: var(--surface);
+    color: var(--muted);
+    padding: 0.2rem 0.5rem;
+    text-align: left;
+    font-size: 0.5rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    font-weight: normal;
+}
+.log-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+}
+.log-table tbody tr:last-child { border-bottom: none; }
+.log-table tbody tr:first-child td { color: var(--green); }
+.log-table tbody tr:hover { background: color-mix(in srgb, var(--cyan) 5%, transparent); }
+.log-table td { padding: 0.2rem 0.5rem; white-space: nowrap; }
+.td-time  { color: var(--muted); }
+.td-call  { color: var(--text); font-weight: bold; }
+.td-band  { color: var(--cyan); }
+.td-mode  { color: var(--text); }
+.td-class { color: var(--yellow); }
+.td-sect  { color: var(--green); font-weight: bold; }
+.td-op    { color: var(--muted); }
+.log-empty { text-align: center; color: var(--muted); padding: 1.5rem; font-size: 0.9rem; }
+{% endblock %}
+
+{% block content %}
+<div class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-value green">{{ worked_count }}</span>
+        <span class="stat-label">Worked</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value muted">{{ total - worked_count }}</span>
+        <span class="stat-label">Remaining</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value">{{ total }}</span>
+        <span class="stat-label">Total Sections</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value green">{{ pct }}%</span>
+        <span class="stat-label">Complete</span>
+    </div>
+</div>
+
+<div class="overall-progress">
+    <div class="overall-fill" style="width: {{ pct }}%"></div>
+</div>
+
+<div class="districts-grid">
+    {% for district, section_list in sections.items() %}
+    {% if district != "VE" %}
+    <div class="district-card">
+        <div class="district-header">{{ district }}</div>
+        <div class="sections-list">
+            {% for abbr, name in section_list %}
+            <div class="chip {% if abbr in worked %}worked{% endif %}" title="{{ name }}">{{ abbr }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<div class="canada-row">
+    <div class="canada-header">CANADA / VE</div>
+    <div class="canada-chips">
+        {% for abbr, name in sections["VE"] %}
+        <div class="chip {% if abbr in worked %}worked{% endif %}" title="{{ name }}">{{ abbr }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="log-card">
+    <div class="log-title">Last 10 Contacts</div>
+    {% if contacts %}
+    <table class="log-table">
+        <thead>
+            <tr>
+                <th>Date / Time</th>
+                <th>Call</th>
+                <th>Band</th>
+                <th>Mode</th>
+                <th>Class</th>
+                <th>Section</th>
+                <th>Operator</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contacts %}
+            <tr>
+                <td class="td-time">{{ c.Timestamp[:16] if c.Timestamp else "—" }}</td>
+                <td class="td-call">{{ c.Call or "—" }}</td>
+                <td class="td-band">{{ band_names.get(c.Band, c.Band ~ "M") }}</td>
+                <td class="td-mode">{{ c.Mode or "—" }}</td>
+                <td class="td-class">{{ c.Class or "—" }}</td>
+                <td class="td-sect">{{ c.Sect or "—" }}</td>
+                <td class="td-op">{{ c.Operator or "—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="log-empty">No contacts logged yet — waiting for N1MM data on port 12060.</div>
+    {% endif %}
+</div>
+{% endblock %}

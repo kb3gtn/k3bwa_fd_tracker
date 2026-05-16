@@ -1,0 +1,20 @@
+
+
+The following is what is received in udp multicast on port 12060 when a new connect is added.
+--------------------------------------------------
+b'<?xml version="1.0" encoding="utf-8"?>\r\n<contactinfo>\r\n\t<app>N1MM</app>\r\n\t<contestname>FD</contestname>\r\n\t<dbname>ham_test.s3db</dbname>\r\n\t<contestnr>1</contestnr>\r\n\t<timestamp>2026-05-16 02:13:43</timestamp>\r\n\t<mycall>KB3GTN</mycall>\r\n\t<band>14</band>\r\n\t<rxfreq>1420000</rxfreq>\r\n\t<txfreq>1420000</txfreq>\r\n\t<operator>KB3GTN</operator>\r\n\t<mode>USB</mode>\r\n\t<call>AA3MN</call>\r\n\t<countryprefix>K</countryprefix>\r\n\t<wpxprefix>AA3</wpxprefix>\r\n\t<stationprefix>KB3GTN</stationprefix>\r\n\t<continent>NA</continent>\r\n\t<snt>59</snt>\r\n\t<sntnr>1</sntnr>\r\n\t<rcv>59</rcv>\r\n\t<rcvnr>0</rcvnr>\r\n\t<gridsquare></gridsquare>\r\n\t<exchange1>1D</exchange1>\r\n\t<section>MDC</section>\r\n\t<comment></comment>\r\n\t<qth></qth>\r\n\t<name></name>\r\n\t<power></power>\r\n\t<misctext></misctext>\r\n\t<zone>5</zone>\r\n\t<prec></prec>\r\n\t<ck>0</ck>\r\n\t<ismultiplier1>0</ismultiplier1>\r\n\t<ismultiplier2>0</ismultiplier2>\r\n\t<ismultiplier3>0</ismultiplier3>\r\n\t<points>1</points>\r\n\t<radionr>1</radionr>\r\n\t<run1run2>1</run1run2>\r\n\t<RoverLocation></RoverLocation>\r\n\t<RadioInterfac'
+---------------------------------------------------
+
+The following is what is received when a contact is being updated.
+---------------------------------------------------
+b'<?xml version="1.0" encoding="utf-8"?>\r\n<contactreplace>\r\n\t<app>N1MM</app>\r\n\t<contestname>FD</contestname>\r\n\t<dbname>ham_test.s3db</dbname>\r\n\t<contestnr>1</contestnr>\r\n\t<timestamp>2026-05-16 02:13:43</timestamp>\r\n\t<mycall>KB3GTN</mycall>\r\n\t<band>14</band>\r\n\t<rxfreq>1420000</rxfreq>\r\n\t<txfreq>1420000</txfreq>\r\n\t<operator>KB3GTN</operator>\r\n\t<mode>USB</mode>\r\n\t<call>AA3MM</call>\r\n\t<countryprefix>K</countryprefix>\r\n\t<wpxprefix>AA3</wpxprefix>\r\n\t<stationprefix>KB3GTN</stationprefix>\r\n\t<continent>NA</continent>\r\n\t<snt>59</snt>\r\n\t<sntnr>1</sntnr>\r\n\t<rcv>59</rcv>\r\n\t<rcvnr>0</rcvnr>\r\n\t<gridsquare></gridsquare>\r\n\t<exchange1>1D</exchange1>\r\n\t<section>MDC</section>\r\n\t<comment></comment>\r\n\t<qth></qth>\r\n\t<name></name>\r\n\t<power></power>\r\n\t<misctext></misctext>\r\n\t<zone>5</zone>\r\n\t<prec></prec>\r\n\t<ck>0</ck>\r\n\t<ismultiplier1>0</ismultiplier1>\r\n\t<ismultiplier2>0</ismultiplier2>\r\n\t<ismultiplier3>0</ismultiplier3>\r\n\t<points>1</points>\r\n\t<radionr>1</radionr>\r\n\t<run1run2>1</run1run2>\r\n\t<RoverLocation></RoverLocation>\r\n\t<RadioInter'
+---------------------------------------------------
+
+The following is what is recewived when a contact is deleted.
+---------------------------------------------------
+b'<?xml version="1.0" encoding="utf-8"?>\r\n<contactdelete>\r\n\t<app>N1MM</app>\r\n\t<timestamp>2026-05-16 02:13:43</timestamp>\r\n\t<call>AA3MM</call>\r\n\t<mycall>KB3GTN</mycall>\r\n\t<band>14</band>\r\n\t<contestnr>1</contestnr>\r\n\t<StationName>WIN11VM</StationName>\r\n\t<ID>7d7f076469a84d1ca10432096799d9fb</ID>\r\n</contactdelete>'
+---------------------------------------------------
+
+Details specification for XML format located at 
+https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/#xml-schema-and-message-field-lists
+

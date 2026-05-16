@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}About Field Day{% endblock %}
+
+{% block extra_style %}
+.fd-wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+.fd-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    text-align: center;
+    margin-bottom: 0.2rem;
+    letter-spacing: 4px;
+}
+.fd-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+}
+.fd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+.fd-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+}
+.fd-card.green  { border-left-color: var(--green); }
+.fd-card.yellow { border-left-color: var(--yellow); }
+.fd-card.red    { border-left-color: var(--red); }
+.fd-card h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.45rem;
+    color: var(--cyan);
+}
+.fd-card.green  h2 { color: var(--green); }
+.fd-card.yellow h2 { color: var(--yellow); }
+.fd-card.red    h2 { color: var(--red); }
+.fd-card p { font-size: 0.88rem; line-height: 1.6; color: var(--text); }
+.hl { color: var(--green); font-weight: bold; }
+{% endblock %}
+
+{% block content %}
+<div class="fd-wrap">
+    <div class="fd-title">ARRL FIELD DAY</div>
+    <div class="fd-sub">THE LARGEST AMATEUR RADIO EVENT IN NORTH AMERICA</div>
+
+    <div class="fd-grid">
+        <div class="fd-card">
+            <h2>What is Field Day?</h2>
+            <p>
+                ARRL Field Day is an annual <span class="hl">emergency preparedness exercise</span> held the
+                last full weekend of June. Amateur radio operators across North America set up temporary
+                stations — often outdoors, off the commercial power grid — to practice deploying
+                emergency communications under realistic conditions.
+            </p>
+        </div>
+
+        <div class="fd-card green">
+            <h2>Scoring</h2>
+            <p>
+                Contacts (QSOs) made during the <span class="hl">24-hour operating period</span> earn points.
+                Phone (voice) contacts are worth <span class="hl">1 point</span>; CW (Morse code) and digital
+                mode contacts are worth <span class="hl">2 points</span>. Bonus multipliers are awarded for
+                working each of the <span class="hl">83 ARRL/RAC sections</span> across the US and Canada.
+                Additional bonus points reward operating on emergency power, satellite contacts, and more.
+            </p>
+        </div>
+
+        <div class="fd-card yellow">
+            <h2>Operating Categories</h2>
+            <p>
+                Stations compete in classes based on the number of simultaneous transmitters and power source.
+                <span class="hl">1A</span> = 1 transmitter, emergency power.
+                <span class="hl">2A</span> = 2 transmitters, emergency power.
+                Stations on commercial power use the <span class="hl">D</span> category.
+                Higher transmitter counts allow more contacts but require more operators and infrastructure.
+            </p>
+        </div>
+
+        <div class="fd-card red">
+            <h2>Why It Matters</h2>
+            <p>
+                When disasters strike and conventional communications collapse, amateur radio operators provide
+                critical support for emergency services. Field Day tests the ability to operate anywhere,
+                anytime, on any available power source — demonstrating that
+                <span class="hl">ham radio works when nothing else does</span>.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

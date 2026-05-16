@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Contact Statistics{% endblock %}
+
+{% block extra_style %}
+.totals-bar {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+.big-stat { text-align: center; }
+.big-number {
+    font-family: 'Orbitron', monospace;
+    font-size: 3.5rem;
+    display: block;
+    line-height: 1;
+    font-weight: 900;
+}
+.big-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.tables-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.card-title {
+    font-family: 'Orbitron', monospace;
+    background: var(--surface);
+    color: var(--cyan);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    text-shadow: var(--glow-c);
+}
+table { width: 100%; border-collapse: collapse; }
+td { padding: 0.35rem 0.6rem; font-size: 0.85rem; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+.col-label { color: var(--text); }
+.col-count { text-align: right; color: var(--green); font-weight: bold; min-width: 3rem; }
+.col-bar { width: 45%; padding-right: 0.4rem; }
+.mini-bar { height: 7px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.mini-fill { height: 100%; background: var(--green); box-shadow: 0 0 4px var(--green); }
+.empty { text-align: center; color: var(--muted); padding: 2.5rem 1rem; font-size: 0.85rem; }
+{% endblock %}
+
+{% block content %}
+<div class="totals-bar">
+    <div class="big-stat">
+        <span class="big-number" style="color:var(--green);text-shadow:0 0 15px var(--green)">{{ stats.total }}</span>
+        <span class="big-label">Total QSOs</span>
+    </div>
+    <div class="big-stat">
+        <span class="big-number" style="color:var(--cyan);text-shadow:0 0 15px var(--cyan)">{{ stats.points }}</span>
+        <span class="big-label">Total Points</span>
+    </div>
+</div>
+
+{% if stats.total == 0 %}
+<div class="empty">No contacts logged yet — waiting for N1MM data on port 12060.</div>
+{% else %}
+<div class="tables-grid">
+
+    <div class="stat-card">
+        <div class="card-title">By Mode</div>
+        <table>
+            {% set mx = stats.by_mode[0].count if stats.by_mode else 1 %}
+            {% for row in stats.by_mode %}
+            <tr>
+                <td class="col-label">{{ row.Mode or "—" }}</td>
+                <td class="col-bar">
+                    <div class="mini-bar">
+                        <div class="mini-fill" style="width:{{ (row.count / mx * 100)|round }}%"></div>
+                    </div>
+                </td>
+                <td class="col-count">{{ row.count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="stat-card">
+        <div class="card-title">By Band</div>
+        <table>
+            {% set mx = stats.by_band[0].count if stats.by_band else 1 %}
+            {% for row in stats.by_band %}
+            <tr>
+                <td class="col-label">{{ band_names.get(row.Band, row.Band ~ " MHz") }}</td>
+                <td class="col-bar">
+                    <div class="mini-bar">
+                        <div class="mini-fill" style="width:{{ (row.count / mx * 100)|round }}%"></div>
+                    </div>
+                </td>
+                <td class="col-count">{{ row.count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="stat-card">
+        <div class="card-title">By Operator</div>
+        <table>
+            {% set mx = stats.by_operator[0].count if stats.by_operator else 1 %}
+            {% for row in stats.by_operator %}
+            <tr>
+                <td class="col-label">{{ row.Operator or "—" }}</td>
+                <td class="col-bar">
+                    <div class="mini-bar">
+                        <div class="mini-fill" style="width:{{ (row.count / mx * 100)|round }}%"></div>
+                    </div>
+                </td>
+                <td class="col-count">{{ row.count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+{% endif %}
+{% endblock %}

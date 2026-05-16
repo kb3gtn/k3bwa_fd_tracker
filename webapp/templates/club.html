@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}Bowie Wireless Association{% endblock %}
+
+{% block extra_style %}
+.club-wrap {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.club-sidebar {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.club-logo {
+    width: 100%;
+    max-width: 240px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--cyan) 20%, transparent);
+    background-color: #0a0e14;
+    padding: 0.5rem;
+}
+.club-info-card {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+}
+.club-info-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.35rem;
+}
+.club-info-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+.club-info-row:last-child { margin-bottom: 0; }
+.info-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.info-value { font-size: 0.85rem; color: var(--text); }
+.info-value.accent { color: var(--green); font-weight: bold; }
+
+.club-main { flex: 1; min-width: 0; }
+.club-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    letter-spacing: 2px;
+    margin-bottom: 0.2rem;
+}
+.club-tagline {
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 1.1rem;
+}
+.club-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 4px;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 0.75rem;
+}
+.club-card.green  { border-left-color: var(--green); }
+.club-card.yellow { border-left-color: var(--yellow); }
+.club-card h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    margin-bottom: 0.45rem;
+}
+.club-card.green  h2 { color: var(--green); }
+.club-card.yellow h2 { color: var(--yellow); }
+.club-card p { font-size: 0.88rem; line-height: 1.65; color: var(--text); }
+.hl { color: var(--green); font-weight: bold; }
+.hl-y { color: var(--yellow); font-weight: bold; }
+{% endblock %}
+
+{% block content %}
+<div class="club-wrap">
+
+    <!-- Sidebar: logo + quick facts -->
+    <div class="club-sidebar">
+        <img class="club-logo" src="/static/bwa_logo.png" alt="Bowie Wireless Association Logo">
+
+        <div class="club-info-card">
+            <div class="club-info-title">Quick Facts</div>
+            <div class="club-info-row">
+                <span class="info-label">Simplex</span>
+                <span class="info-value accent">146.460 MHz</span>
+            </div>
+            <div class="club-info-row">
+                <span class="info-label">Meetings</span>
+                <span class="info-value">2nd Monday, 7:00–8:30 PM</span>
+            </div>
+            <div class="club-info-row">
+                <span class="info-label">Location</span>
+                <span class="info-value">Bowie Senior Center<br>Meeting Room #8</span>
+            </div>
+            <div class="club-info-row">
+                <span class="info-label">Address</span>
+                <span class="info-value">14900 Health Center Dr<br>Bowie, MD 20716</span>
+            </div>
+            <div class="club-info-row">
+                <span class="info-label">Website</span>
+                <span class="info-value accent">bowiewireless.org</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="club-main">
+        <div class="club-name">Bowie Wireless Association</div>
+        <div class="club-tagline">AN AMATEUR RADIO CLUB IN BOWIE, MD</div>
+
+        <div class="club-card">
+            <h2>Who We Are</h2>
+            <p>
+                The Bowie Wireless Association is a community of <span class="hl">FCC licensed Amateur Radio Operators</span>
+                dedicated to empowering members with the knowledge and skills needed to excel across
+                HF, VHF, and UHF operations. Experienced members — known as
+                <span class="hl">Elmers</span> — mentor newer operators and help grow the hobby
+                throughout the greater Bowie, Maryland area.
+            </p>
+        </div>
+
+        <div class="club-card green">
+            <h2>Public Service &amp; Emergency Communications</h2>
+            <p>
+                Members actively participate in the <span class="hl">Amateur Radio Emergency Service (ARES)</span>
+                and collaborate with the National Weather Service's <span class="hl">SkyWarn</span> program in
+                Prince George's County to provide severe weather spotting and warnings.
+                The club also assists local agencies with
+                <span class="hl">Incident Command System (ICS)</span> training and supplies
+                communications support for community events.
+            </p>
+        </div>
+
+        <div class="club-card yellow">
+            <h2>Activities &amp; Training</h2>
+            <p>
+                The club hosts monthly meetings, <span class="hl-y">ARRL Field Day</span> operations,
+                Parks on the Air (POTA) outings, and hands-on training in digital modes including
+                <span class="hl-y">FT8</span>, <span class="hl-y">DMR</span>, and
+                <span class="hl-y">Winlink</span>. Members also run CW (Morse code) practice
+                sessions and antenna construction workshops throughout the year.
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

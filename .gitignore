@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+webapp/.venv/
+
+# Runtime database (created on first run)
+webapp/fieldday.db
+
+# OS
+.DS_Store
+Thumbs.db

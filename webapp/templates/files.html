@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}File Distribution{% endblock %}
+
+{% block extra_style %}
+.files-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.files-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: var(--glow-c);
+    margin-bottom: 0.3rem;
+    letter-spacing: 3px;
+}
+.files-sub {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+    letter-spacing: 1px;
+}
+.files-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.files-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.files-table thead th {
+    background: var(--surface);
+    color: var(--muted);
+    padding: 0.5rem 1rem;
+    text-align: left;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    font-weight: normal;
+}
+.files-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+}
+.files-table tbody tr:last-child { border-bottom: none; }
+.files-table tbody tr:hover { background: color-mix(in srgb, var(--cyan) 5%, transparent); }
+.files-table td { padding: 0.55rem 1rem; }
+.td-name a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+.td-name a:hover {
+    color: var(--green);
+    text-shadow: var(--glow-g);
+    text-decoration: underline;
+}
+.td-size { color: var(--muted); text-align: right; white-space: nowrap; }
+.td-date { color: var(--muted); text-align: right; white-space: nowrap; font-size: 0.85rem; }
+.dl-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+.dl-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+    box-shadow: var(--glow-g);
+}
+.empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 3rem 1rem;
+    font-size: 0.9rem;
+}
+.upload-section {
+    margin-top: 1.25rem;
+}
+.upload-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+.upload-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+.upload-card input[type="password"],
+.upload-card input[type="file"] {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.3rem 0.65rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.upload-card input[type="password"]:focus,
+.upload-card input[type="file"]:focus {
+    border-color: var(--cyan);
+}
+.up-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.85rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+.up-btn:hover        { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow-c); }
+.up-btn.submit       { border-color: var(--green); color: var(--green); }
+.up-btn.submit:hover { box-shadow: var(--glow-g); }
+.up-btn.danger:hover { border-color: var(--red); color: var(--red); }
+.flash-msg {
+    padding: 0.45rem 1rem;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    border: 1px solid var(--yellow);
+    color: var(--yellow);
+    background: color-mix(in srgb, var(--yellow) 8%, transparent);
+    margin-bottom: 0.75rem;
+}
+.flash-msg.ok {
+    border-color: var(--green);
+    color: var(--green);
+    background: color-mix(in srgb, var(--green) 8%, transparent);
+}
+{% endblock %}
+
+{% block content %}
+<div class="files-wrap">
+    <div class="files-title">File Distribution</div>
+    <div class="files-sub">FILES AVAILABLE FOR DOWNLOAD ON THIS NETWORK</div>
+
+    {% with messages = get_flashed_messages() %}
+      {% for msg in messages %}
+        <div class="flash-msg {{ 'ok' if msg.startswith('Uploaded') else '' }}">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="files-card">
+        {% if entries %}
+        <table class="files-table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th style="text-align:right">Size</th>
+                    <th style="text-align:right">Modified (UTC)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in entries %}
+                <tr>
+                    <td class="td-name">
+                        <a href="/static/files/{{ f.name }}" target="_blank">{{ f.name }}</a>
+                    </td>
+                    <td class="td-size">{{ f.size }}</td>
+                    <td class="td-date">
+                        {{ f.mtime | int | datetimeformat }}
+                    </td>
+                    <td style="text-align:right; padding-right:0.75rem">
+                        <a class="dl-btn" href="/static/files/{{ f.name }}" download="{{ f.name }}">&#11015; Download</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No files available — place files in the <code>static/files/</code> directory.</div>
+        {% endif %}
+    </div>
+
+    <div class="upload-section">
+        <div class="upload-title">&#11014; Upload</div>
+        {% if logged_in %}
+        <div class="upload-card">
+            <form method="post" action="/files/upload" enctype="multipart/form-data"
+                  style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;flex:1">
+                <input type="file" name="file" required>
+                <button type="submit" class="up-btn submit">&#11014; Upload</button>
+            </form>
+            <form method="post" action="/files/logout">
+                <button type="submit" class="up-btn danger">Lock</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="upload-card">
+            <form method="post" action="/files/login"
+                  style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
+                <input type="password" name="password" placeholder="Upload password" autocomplete="off">
+                <button type="submit" class="up-btn">Unlock</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

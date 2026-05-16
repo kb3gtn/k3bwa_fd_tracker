@@ -1,0 +1,17 @@
+[Unit]
+Description=N1MM UDP Listener for hub.k3bwa.us Field Day Tracker
+After=network.target
+
+[Service]
+User=k3bwa
+Group=k3bwa
+WorkingDirectory=/webspaces/hub.k3bwa.us/webapp
+Environment="PATH=/webspaces/hub.k3bwa.us/webapp/.venv/bin"
+ExecStart=/webspaces/hub.k3bwa.us/webapp/.venv/bin/python listener.py
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
