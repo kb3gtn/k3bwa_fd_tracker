@@ -4,15 +4,17 @@ A Flask web application that listens for UDP multicast packets from [N1MM Logger
 
 ## Screenshots
 
-| Section Tracker | Statistics |
+| Section Tracker (Day) | Section Tracker (Night) |
 |---|---|
-| ![Section Tracker](static/screenshots/Section_Tracker.png) | ![Statistics](static/screenshots/Statistics.png) |
+| ![Section Tracker Day](static/screenshots/Section_Tracker.png) | ![Section Tracker Night](static/screenshots/Section_Tracker_Night.png) |
 
-| Field Day Slide | Club Page |
+| Statistics | Field Day Slide |
 |---|---|
-| ![Field Day](static/screenshots/Fieldday_slide.png) | ![Club Page](static/screenshots/Club_Page.png) |
+| ![Statistics](static/screenshots/Statistics.png) | ![Field Day](static/screenshots/Fieldday_slide.png) |
 
-![File Distribution](static/screenshots/File_Page.png)
+| Club Page | File Distribution |
+|---|---|
+| ![Club Page](static/screenshots/Club_Page.png) | ![File Page](static/screenshots/File_Page.png) |
 
 ---
 
