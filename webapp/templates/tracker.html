@@ -81,22 +81,39 @@
     box-shadow: 0 0 4px var(--green);
 }
 
-/* ── Canada row ── */
-.canada-row {
+/* ── USA / Canada containers ── */
+.region-box {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 4px;
     padding: 0.45rem 0.6rem;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
 }
-.canada-header {
+body.light .region-box { background: #707880; }
+.region-header {
     font-family: 'Orbitron', monospace;
-    color: var(--yellow);
     font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 2px;
     margin-bottom: 0.4rem;
-    text-shadow: 0 0 6px var(--yellow);
+}
+.region-header.canada { color: var(--yellow); text-shadow: 0 0 6px var(--yellow); }
+.usa-r { color: #dd1111; text-shadow: 0 0 6px rgba(221,17,17,0.6); }
+.usa-w { color: #eeeeee; text-shadow: 0 0 6px rgba(238,238,238,0.6); }
+.usa-b { color: #1144dd; text-shadow: 0 0 6px rgba(17,68,221,0.6); }
+.usa-y { color: var(--yellow); text-shadow: 0 0 6px var(--yellow); }
+body.light .region-header.canada,
+body.light .usa-y { color: #c89000; text-shadow: none; }
+.canada-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.35rem 0.5rem;
+}
+
+/* ── Canada row (kept for grid-column span inside districts-grid) ── */
+.canada-row {
+    grid-column: 1 / -1;
 }
 .canada-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
@@ -177,27 +194,32 @@
     <div class="overall-fill" style="width: {{ pct }}%"></div>
 </div>
 
-<div class="districts-grid">
-    {% for district, section_list in sections.items() %}
-    {% if district != "VE" %}
-    <div class="district-card">
-        <div class="district-header">{{ district }}</div>
-        <div class="sections-list">
-            {% for abbr, name in section_list %}
+<div class="region-box">
+    <div class="region-header usa"><span class="usa-r">U</span><span class="usa-w">S</span><span class="usa-b">A</span> <span class="usa-y">(A/N/K/W)</span></div>
+    <div class="districts-grid">
+        {% for district, section_list in sections.items() %}
+        {% if district != "VE" %}
+        <div class="district-card">
+            <div class="district-header">{{ district }}</div>
+            <div class="sections-list">
+                {% for abbr, name in section_list %}
+                <div class="chip {% if abbr in worked %}worked{% endif %}" title="{{ name }}">{{ abbr }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="region-box canada-row">
+    <div class="region-header canada">CANADA (VE/VA/VO/VY/CY) and DX</div>
+    <div class="canada-card">
+        <div class="canada-chips">
+            {% for abbr, name in sections["VE"] %}
             <div class="chip {% if abbr in worked %}worked{% endif %}" title="{{ name }}">{{ abbr }}</div>
             {% endfor %}
         </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-</div>
-
-<div class="canada-row">
-    <div class="canada-header">CANADA / VE</div>
-    <div class="canada-chips">
-        {% for abbr, name in sections["VE"] %}
-        <div class="chip {% if abbr in worked %}worked{% endif %}" title="{{ name }}">{{ abbr }}</div>
-        {% endfor %}
     </div>
 </div>
 
